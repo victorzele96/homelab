@@ -1,0 +1,15 @@
+# Python
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+.env
+
+# React / Node.js
+node_modules/
+dist/
+.eslintcache
+.DS_Store
+
+# Docker (Optional but good)
+.dockerignore
