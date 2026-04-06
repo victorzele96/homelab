@@ -1,3 +1,5 @@
+# --- Root .gitignore ---
+
 # Python
 venv/
 .venv/
@@ -6,10 +8,21 @@ __pycache__/
 .env
 
 # React / Node.js
-node_modules/
-dist/
+**/node_modules/
+**/dist/
 .eslintcache
 .DS_Store
+dist-ssr
+*.local
 
-# Docker (Optional but good)
-.dockerignore
+# DevOps / Home Lab
+.terraform/
+*.tfstate*
+.kube/config
+kubeconfig
+*.log
+docker-compose.override.yml
+
+# IDE
+.vscode/
+.idea/
