@@ -17,7 +17,7 @@ const Layout = ({ children }) => {
         <div className="p-6">
           <div className="flex items-center gap-3 text-[#c3f5ff]">
             <span className="material-symbols-outlined font-bold">orbit</span>
-            <span className="font-['Space_Grotesk'] font-bold text-xl tracking-wider uppercase">Kinetic</span>
+            <span className="font-['Space_Grotesk'] font-bold text-xl tracking-wider uppercase">Home Lab</span>
           </div>
         </div>
 
