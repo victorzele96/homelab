@@ -1,0 +1,28 @@
+# --- Root .gitignore ---
+
+# Python
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+.env
+
+# React / Node.js
+**/node_modules/
+**/dist/
+.eslintcache
+.DS_Store
+dist-ssr
+*.local
+
+# DevOps / Home Lab
+.terraform/
+*.tfstate*
+.kube/config
+kubeconfig
+*.log
+docker-compose.override.yml
+
+# IDE
+.vscode/
+.idea/
