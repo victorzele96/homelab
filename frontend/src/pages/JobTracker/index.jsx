@@ -8,10 +8,10 @@ const JobTracker = () => {
 
     // Dummy Data
     const applications = [
-      { id: 1, link: "github.com/careers/se-01", title: "Senior Systems Architect", company: "GitHub Core Services", status: "Interviewing", statusColor: "secondary", date: "2023-11-24:14:30", lastupdate: "2023-11-24:14:30" },
-      { id: 2, link: "openai.com/jobs/research", title: "Llama-3 Fine-tuning Expert", company: "OpenAI Research Ops", status: "Pending", statusColor: "primary", date: "2023-11-23:09:15", lastupdate: "2023-11-24:14:30" },
-      { id: 3, link: "anthropic.com/careers/ux", title: "Product Designer (UI/UX)", company: "Anthropic Design Studio", status: "Rejected", statusColor: "error", date: "2023-11-20:18:45", lastupdate: "2023-11-24:14:30" },
-      { id: 4, link: "stripe.com/jobs/infra", title: "Infrastructure Lead", company: "Stripe Global Ops", status: "Interviewing", statusColor: "secondary", date: "2023-11-19:11:00", lastupdate: "2023-11-24:14:30" },
+      { id: 1, link: "github.com/careers/se-01", title: "Senior Systems Architect", company: "GitHub Core Services", status: "Interviewing", statusColor: "secondary", note: "note 1", date: "2023-11-24:14:30", lastupdate: "2023-11-24:14:30" },
+      { id: 2, link: "openai.com/jobs/research", title: "Llama-3 Fine-tuning Expert", company: "OpenAI Research Ops", status: "Pending", statusColor: "primary", note: "note 2", date: "2023-11-23:09:15", lastupdate: "2023-11-24:14:30" },
+      { id: 3, link: "anthropic.com/careers/ux", title: "Product Designer (UI/UX)", company: "Anthropic Design Studio", status: "Rejected", statusColor: "error", note: "note 3", date: "2023-11-20:18:45", lastupdate: "2023-11-24:14:30" },
+      { id: 4, link: "stripe.com/jobs/infra", title: "Infrastructure Lead", company: "Stripe Global Ops", status: "Interviewing", statusColor: "secondary", note: "note 4", date: "2023-11-19:11:00", lastupdate: "2023-11-24:14:30" },
     ];
 
     const [formData, setFormData] = useState({
@@ -87,6 +87,12 @@ const JobTracker = () => {
               <div className="space-y-2">
                 <label className="block text-xs font-medium text-slate-500 uppercase tracking-wider px-1">Job Link (URL)</label>
                 <input className="w-full bg-[#333538] border border-[#3b494c]/15 focus:ring-1 focus:ring-[#00e5ff] rounded-lg px-4 py-3 text-[#e2e2e6] placeholder:text-slate-600 transition-all" placeholder="https://careers.obsidian.tech/job-0192" type="url" />
+              </div>
+
+              {/* Notes */}
+              <div className="space-y-2">
+                <label className="block text-xs font-medium text-slate-500 uppercase tracking-wider px-1">Notes</label>
+                <input className="w-full bg-[#333538] border border-[#3b494c]/15 focus:ring-1 focus:ring-[#00e5ff] rounded-lg px-4 py-3 text-[#e2e2e6] placeholder:text-slate-600 transition-all" placeholder="Notes" type="text" />
               </div>
 
               {/* Date & Info */}
@@ -183,6 +189,7 @@ const JobTracker = () => {
                 <th className="px-6 py-4 text-[10px] font-mono text-slate-500 uppercase tracking-widest">Node Path (Link)</th>
                 <th className="px-6 py-4 text-[10px] font-mono text-slate-500 uppercase tracking-widest">Operational Title</th>
                 <th className="px-6 py-4 text-[10px] font-mono text-slate-500 uppercase tracking-widest">Telemetry Status</th>
+                <th className="px-6 py-4 text-[10px] font-mono text-slate-500 uppercase tracking-widest">Notes</th>
                 <th className="px-6 py-4 text-[10px] font-mono text-slate-500 uppercase tracking-widest">Timestamp</th>
                 <th className="px-6 py-4 text-[10px] font-mono text-slate-500 uppercase tracking-widest">Last Updated</th>
                 <th className="px-6 py-4 text-[10px] font-mono text-slate-500 uppercase tracking-widest text-right">Actions</th>
@@ -204,6 +211,7 @@ const JobTracker = () => {
                   <td className="px-6 py-4">
                     <StatusBadge status={app.status} type={app.statusColor} />
                   </td>
+                  <td className="px-6 py-4 text-xs font-mono text-slate-400">{app.note}</td>
                   <td className="px-6 py-4 text-xs font-mono text-slate-400">{app.date}</td>
                   <td className="px-6 py-4 text-xs font-mono text-slate-400">{app.lastupdate}</td>
                   <td className="px-6 py-4 text-right">
