@@ -4,28 +4,16 @@ from dotenv import load_dotenv
 
 class DatabaseManager:
     def __init__(self, db_name=None):
-        # 1. Locate the absolute path of the 'database' folder
-        # (Where this base_manager.py lives)
-        base_path = os.path.dirname(os.path.abspath(__file__))
+        # Load local .env if running directly via WSL (Docker will override this automatically)
+        load_dotenv()
         
-        # 2. Dynamically build the path to the sub-folder .env
-        # If db_name is 'job_tracker', it looks in 'database/job_tracker_db/.env'
-        env_folder = f"{db_name}_db"
-        env_path = os.path.join(base_path, env_folder, ".env")
-        
-        # 3. Load the specific environment variables
-        if os.path.exists(env_path):
-            load_dotenv(env_path, override=True)
-        else:
-            print(f"Warning: .env file not found at {env_path}")
-
-        # 4. Map the configuration
+        # Map the configuration using environment variables
         self.config = {
             "dbname": os.getenv("DB_NAME") or db_name,
             "user": os.getenv("DB_USER"),
             "password": os.getenv("DB_PASSWORD"),
-            "host": os.getenv("DB_HOST"),
-            "port": os.getenv("DB_PORT")
+            "host": os.getenv("DB_HOST", "localhost"), # Fallback to localhost for local dev
+            "port": os.getenv("DB_PORT", "5444")
         }
 
     def run_query(self, query, success_message="Query executed successfully"):

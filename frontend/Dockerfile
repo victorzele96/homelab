@@ -10,7 +10,7 @@ WORKDIR /frontend
 # Set ownership to non-root user for security and write permissions
 RUN chown -R node:node /frontend
 
-# Switch to node (אבטחה)
+# Switch to node
 USER node
 
 # Copy Dependencies

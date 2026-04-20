@@ -3,7 +3,7 @@ import React from 'react';
 
 export const MetricCard = ({ title, value, unit, progress, color, icon, details }) => (
   <div className="bg-[#1a1c1f] rounded-xl p-6 border border-[#3b494c]/20 relative overflow-hidden group">
-    {/* אייקון רקע שקוף */}
+    {/* */}
     <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
       <span className="material-symbols-outlined text-6xl text-white">{icon}</span>
     </div>

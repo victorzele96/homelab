@@ -19,4 +19,4 @@ docker run -it \
   -v "$(pwd):/frontend" \
   -v /frontend/node_modules \
   --env NODE_ENV=development \
-  $IMAGE_NAME
+  $IMAGE_NAME   
