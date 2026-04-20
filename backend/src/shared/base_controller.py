@@ -4,21 +4,18 @@ import psycopg2
 from fastapi import HTTPException
 from typing import Optional, Any
 
-# 1. Get the absolute path of the current file (controller.py)
-current_script_path = os.path.abspath(__file__)
-
-# 2. Get the project root directory (/mnt/d/homelab)
-project_root = os.path.dirname(os.path.dirname(os.path.dirname(current_script_path)))
-
-# 3. Define the exact path to the database folder
-database_folder = os.path.join(project_root, 'database')
-
-# 4. Add the database folder to sys.path so Python looks inside it
-if database_folder not in sys.path:
-    sys.path.append(database_folder)
-
-# Now Python can find base_manager.py which is inside the database folder
-from base_manager import DatabaseManager
+# Try to import DatabaseManager using the package structure.
+# This works when running main.py from the /backend directory.
+try:
+    from src.shared.database.base_manager import DatabaseManager
+except ImportError:
+    # Fallback for running scripts locally from within internal subdirectories.
+    # Moves 3 levels up from base_controller.py to reach the /backend root.
+    # Path: base_controller.py (0) -> shared (1) -> src (2) -> backend (3)
+    import sys
+    import os
+    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..")))
+    from src.shared.database.base_manager import DatabaseManager
 
 class BaseController:
     def __init__(self, db_name):

@@ -1,0 +1,26 @@
+# Python environment and cache
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Docker & CI/CD
+Dockerfile
+docker-compose.yml
+.dockerignore
+.git/
+.gitignore
+
+# Environment variables and secrets
+.env
+*.secrets
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Project specific
+*.log
+database/

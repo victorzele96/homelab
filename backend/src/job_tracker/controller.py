@@ -8,14 +8,14 @@ current_script_path = os.path.abspath(__file__)
 # 2. Get the project root directory (/mnt/d/homelab)
 project_root = os.path.dirname(os.path.dirname(current_script_path))
 
-# 3. Define the exact path to the database folder
+# 3. Define the exact path to the backend-api folder
 backend_folder = os.path.join(project_root, 'src/backend-api')
 
-# 4. Add the database folder to sys.path so Python looks inside it
+# 4. Add the backend-api folder to sys.path so Python looks inside it
 if backend_folder not in sys.path:
     sys.path.append(backend_folder)
 
-from shared.base_controller import BaseController
+from src.shared.base_controller import BaseController
 
 class JobTrackerController(BaseController):
     def __init__(self):
@@ -28,28 +28,18 @@ class JobTrackerController(BaseController):
 
     def add_application(self, application_data: dict):
         """
-        Adds a new job application to the database.
-        application_data: A dictionary containing company_name, job_title, tech_stack, etc.
+        Adds a new job application with notes.
         """
-        
-        # Tech Stack Manipulation:
-        # If the input is a comma-separated string, convert it to a list.
-        # Psycopg2 will automatically map a Python list to a PostgreSQL array (TEXT[]).
-        tech_stack = application_data.get('tech_stack')
-        if tech_stack and isinstance(tech_stack, str):
-            tech_stack = [t.strip() for t in tech_stack.split(',')]
-
         query = """
-            INSERT INTO applications (company_name, job_title, tech_stack, status)
-            VALUES (%s, %s, %s, %s)
+            INSERT INTO applications (company_name, job_title, job_link, status, notes)
+            VALUES (%s, %s, %s, %s, %s)
         """
-        
-        # Mapping the data to positional parameters for SQL injection prevention
         params = (
             application_data.get('company_name'),
             application_data.get('job_title'),
-            tech_stack,
-            application_data.get('status', 'Applied') # Default status if not provided
+            application_data.get('job_link', ''),
+            application_data.get('status', 'Applied'),
+            application_data.get('notes')
         )
         
         return self.execute_action(
@@ -61,3 +51,8 @@ class JobTrackerController(BaseController):
     def update_status(self, new_status, job_id):
         query = "UPDATE applications SET status = %s WHERE id = %s"
         return self.execute_action(query, params=(new_status, job_id))
+    
+
+    def remove_job(self, job_id):
+        query = "DELETE FROM applications WHERE id = %s"
+        return self.execute_action(query, params=(job_id,))

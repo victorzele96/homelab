@@ -5,7 +5,7 @@ import os
 # This allows importing base_manager even though it's one level up
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
-from base_manager import DatabaseManager
+from backend.src.shared.database.base_manager import DatabaseManager
 
 def init_chat_ai():
     # 2. Initialize the manager. 

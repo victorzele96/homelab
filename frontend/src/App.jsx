@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Layout from './components/Layout';
+import Layout from './Layout';
 import LandingPage from './pages/LandingPage';
 import ChatAI from './pages/ChatAI';
 import JobTracker from './pages/JobTracker';
