@@ -73,6 +73,20 @@ const JobList = () => {
     fetchJobs();
   }, []);
 
+  useEffect(() => {
+  // Calculate the number of current max page.
+  const totalPages = Math.ceil(jobs.length / jobsPerPage);
+
+  // Checking if the page number is higher than the existing page number and above 0.
+  if (currentPage > totalPages && totalPages > 0) {
+    setCurrentPage(totalPages);
+  }
+  // Edge case: if all was deleted return to page 1.
+  else if (totalPages === 0) {
+    setCurrentPage(1);
+  }
+}, [jobs.length, currentPage, jobsPerPage]);
+
   const handleDelete = async (jobId) => {
     if (!window.confirm("Are you sure you want to terminate this job node?")) return;
 
