@@ -3,21 +3,18 @@ import JobList from '../../services/JobList';
 import JobForm from '../../services/JobForm';
 
 const JobTracker = () => {
-  // 1. הגדרת הסטייט לניהול מצב התצוגה (טופס או טבלה)
+
   const [isAdding, setIsAdding] = useState(false);
-  
-  // 2. מפתח לריענון אוטומטי של הרשימה לאחר הוספת משרה
   const [refreshKey, setRefreshKey] = useState(0);
 
-  // 3. פונקציה שנקראת מה-JobForm לאחר שמירה מוצלחת
+
   const handleSuccess = () => {
-    setIsAdding(false); // סגירת הטופס
-    setRefreshKey(prev => prev + 1); // עדכון המפתח יגרום ל-JobList למשוך נתונים מחדש
+    setIsAdding(false);
+    setRefreshKey(prev => prev + 1); 
   };
 
   return (
     <div className="p-8 pb-12 min-h-screen bg-background">
-      {/* בדיקה האם אנחנו במצב הוספה */}
       {isAdding ? (
         <JobForm 
           onCancel={() => setIsAdding(false)} 
@@ -54,7 +51,6 @@ const JobTracker = () => {
 
           {/* Table Container */}
           <div className="overflow-x-auto">
-            {/* שימוש ב-refreshKey כדי לרענן את הרשימה כשמתווספת משרה */}
             <JobList key={refreshKey} />
           </div>
         </>
