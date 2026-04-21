@@ -25,6 +25,17 @@ async def delete_job(job_id: int):
         print(f"DEBUG: {e}")
         raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail=str(e))
 
+@router.put("/{job_id}", status_code=status.HTTP_200_OK)
+async def update_job(job_id: int, updated_data: JobApplicationCreate):
+    try:
+        data_dict = updated_data.model_dump(mode='json')
+        result = controller.update_application(job_id, data_dict)
+        if not result:
+            raise HTTPException(status_code=404, detail="Job not found")
+        return {"message": "Update Successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
 
 @router.post("/add", status_code=status.HTTP_201_CREATED)
 async def add_job(job_data: JobApplicationCreate):

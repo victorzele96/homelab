@@ -53,7 +53,8 @@ export default {
               "surface-container-low": "#1a1c1f",
               "on-primary-fixed-variant": "#004f58",
               "secondary-container": "#7d01b1",
-              "primary": "#c3f5ff"
+              "primary": "#c3f5ff",
+              "success": "#22bb33"
       },
       fontFamily: {
         "headline": ["Space Grotesk", "sans-serif"],
