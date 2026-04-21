@@ -126,8 +126,8 @@ const JobForm = ({ onCancel, onSuccess }) => {
                   onChange={handleChange}
                   className="w-full bg-[#333538] border border-[#3b494c]/15 focus:ring-1 focus:ring-[#00e5ff] rounded-lg px-4 py-3 text-[#e2e2e6] appearance-none transition-all"
                 >
-                  <option value="Applied">Applied / Waiting</option>
-                  <option value="Interviewing">Interview Scheduled</option>
+                  <option value="Applied">Applied</option>
+                  <option value="Interviewing">Interview</option>
                   <option value="Rejected">Rejected</option>
                   <option value="Pending">Pending</option>
                 </select>

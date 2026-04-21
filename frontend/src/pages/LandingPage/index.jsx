@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { MetricCard, ActivityFeed } from '../../components/DashboardMetrics';
+import { MetricCard } from '../../components/DashboardMetrics';
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -14,86 +14,79 @@ const LandingPage = () => {
         </h1>
         <p className="text-slate-400 max-w-2xl font-['Inter']">
           Neural interface synchronized. All local nodes report stable status. 
-          Monitoring **RPi5 Cluster**.
+          Monitoring <span className="text-white font-mono">RPi5 Cluster</span>.
         </p>
       </header>
-
-      {/* Grid Layout - 12 Columns */}
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+      
+      {/* Main Grid Layout */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         
-        {/* Left Section: Monitoring (8 Columns) */}
-        <div className="md:col-span-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <MetricCard 
-              title="Master Core Processing Unit"
-              value="42.8%"
-              unit="Load"
-              progress={42.8}
-              color="#c3f5ff"
-              icon="memory"
-              details={["TEMP: 54°C", "FREQ: 4.2GHz"]}
-            />
-            <MetricCard 
-              title="Master Memory Allocation"
-              value="18.4"
-              unit="GB / 64GB"
-              progress={28.7}
-              color="#e9b3ff"
-              icon="database"
-              details={["SWAP: 2.1GB", "CACHED: 8.4GB"]}
-            />
-            <MetricCard 
-              title="Worker Core Processing Unit"
-              value="42.8%"
-              unit="Load"
-              progress={42.8}
-              color="#c3f5ff"
-              icon="memory"
-              details={["TEMP: 54°C", "FREQ: 4.2GHz"]}
-            />
-            <MetricCard 
-              title="Worker Memory Allocation"
-              value="4"
-              unit="GB / 8GB"
-              progress={28.7}
-              color="#e9b3ff"
-              icon="database"
-              details={["SWAP: 2.1GB", "CACHED: 8.4GB"]}
-            />
+        {/* Top Section: Navigation Cards (Row 1) */}
+        <div 
+          onClick={() => navigate('/chat')}
+          className="bg-[#1a1c1f] rounded-xl p-6 border border-[#c3f5ff]/20 hover:border-[#c3f5ff]/50 transition-all cursor-pointer group flex flex-col justify-between min-h-[200px]"
+        >
+          <div className="flex justify-between items-start">
+            <span className="material-symbols-outlined text-[#c3f5ff] text-4xl group-hover:scale-110 transition-transform">bolt</span>
+            <span className="material-symbols-outlined text-slate-600">open_in_new</span>
           </div>
-          
-          <ActivityFeed />
+          <div>
+            <h3 className="font-['Space_Grotesk'] text-2xl font-bold mb-2">AI Chat</h3>
+            <p className="text-slate-400 text-sm">Initialize a new session with Ollama instance.</p>
+          </div>
         </div>
 
-        {/* Right Section: Quick Links (4 Columns) */}
-        <div className="md:col-span-4 flex flex-col gap-6">
-          {/* AI Chat Card */}
-          <div 
-            onClick={() => navigate('/chat')}
-            className="bg-[#1a1c1f] rounded-xl p-6 border border-[#c3f5ff]/20 hover:border-[#c3f5ff]/50 transition-all cursor-pointer group"
-          >
-            <div className="flex justify-between mb-8">
-              <span className="material-symbols-outlined text-[#c3f5ff] text-3xl group-hover:scale-110 transition-transform">bolt</span>
-              <span className="material-symbols-outlined text-slate-600">open_in_new</span>
-            </div>
-            <h3 className="font-['Space_Grotesk'] text-xl font-bold mb-2">AI Chat</h3>
-            <p className="text-slate-400 text-sm">Initialize a new session with Llama-3 instance.</p>
+        <div 
+          onClick={() => navigate('/jobs')}
+          className="bg-[#1a1c1f] rounded-xl p-6 border border-[#e9b3ff]/20 hover:border-[#e9b3ff]/50 transition-all cursor-pointer group flex flex-col justify-between min-h-[200px]"
+        >
+          <div className="flex justify-between items-start">
+            <span className="material-symbols-outlined text-[#e9b3ff] text-4xl group-hover:scale-110 transition-transform">rocket_launch</span>
+            <span className="material-symbols-outlined text-slate-600">open_in_new</span>
           </div>
-
-          {/* Job Tracker Card */}
-          <div 
-            onClick={() => navigate('/jobs')}
-            className="bg-[#1a1c1f] rounded-xl p-6 border border-[#e9b3ff]/20 hover:border-[#e9b3ff]/50 transition-all cursor-pointer group"
-          >
-            <div className="flex justify-between mb-8">
-              <span className="material-symbols-outlined text-[#e9b3ff] text-3xl group-hover:scale-110 transition-transform">rocket_launch</span>
-              <span className="material-symbols-outlined text-slate-600">open_in_new</span>
-            </div>
-            <h3 className="font-['Space_Grotesk'] text-xl font-bold mb-2">Job Tracker</h3>
+          <div>
+            <h3 className="font-['Space_Grotesk'] text-2xl font-bold mb-2">Job Tracker</h3>
             <p className="text-slate-400 text-sm">Monitor batch processes and pipelines.</p>
           </div>
         </div>
 
+        {/* Bottom Section: Metrics (Row 2 & 3) */}
+        <MetricCard 
+          title="Master Core Processing Unit"
+          value="42.8%"
+          unit="Load"
+          progress={42.8}
+          color="#c3f5ff"
+          icon="memory"
+          details={["TEMP: 54°C", "FREQ: 4.2GHz"]}
+        />
+        <MetricCard 
+          title="Master Memory Allocation"
+          value="18.4"
+          unit="GB / 64GB"
+          progress={28.7}
+          color="#e9b3ff"
+          icon="database"
+          details={["SWAP: 2.1GB", "CACHED: 8.4GB"]}
+        />
+        <MetricCard 
+          title="Worker Core Processing Unit"
+          value="42.8%"
+          unit="Load"
+          progress={42.8}
+          color="#c3f5ff"
+          icon="memory"
+          details={["TEMP: 54°C", "FREQ: 4.2GHz"]}
+        />
+        <MetricCard 
+          title="Worker Memory Allocation"
+          value="4"
+          unit="GB / 8GB"
+          progress={28.7}
+          color="#e9b3ff"
+          icon="database"
+          details={["SWAP: 2.1GB", "CACHED: 8.4GB"]}
+        />
       </div>
     </main>
   );

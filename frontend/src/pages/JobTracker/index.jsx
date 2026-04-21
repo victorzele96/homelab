@@ -6,6 +6,7 @@ const JobTracker = () => {
 
   const [isAdding, setIsAdding] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+  const [statusFilter, setStatusFilter] = useState('All');
 
 
   const handleSuccess = () => {
@@ -14,7 +15,7 @@ const JobTracker = () => {
   };
 
   return (
-    <div className="p-8 pb-12 min-h-screen bg-background">
+    <div className="p-8 pb-6 bg-background h-full">
       {isAdding ? (
         <JobForm 
           onCancel={() => setIsAdding(false)} 
@@ -23,7 +24,7 @@ const JobTracker = () => {
       ) : (
         <>
           {/* Header Section */}
-          <header className="mb-10 flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+          <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
             <div>
               <h1 className="text-4xl font-['Space_Grotesk'] font-bold text-[#e2e2e6] tracking-tight mb-2 uppercase">
                 Job Tracker Dashboard
@@ -34,10 +35,20 @@ const JobTracker = () => {
             </div>
             
             <div className="flex gap-4">
-              <button className="px-6 py-2.5 bg-[#282a2d] border border-[#3b494c]/20 text-[#e2e2e6] rounded-lg font-medium hover:bg-[#37393d] transition-colors flex items-center gap-2">
-                <span className="material-symbols-outlined text-sm">filter_list</span>
-                Filter
-              </button>
+            <div className="relative flex items-center">
+              <span className="material-symbols-outlined absolute left-3 text-sm text-slate-400 pointer-events-none">filter_list</span>
+              <select 
+                value={statusFilter}
+                onChange={(e) => setStatusFilter(e.target.value)}
+                className="pl-10 pr-6 py-2.5 bg-[#282a2d] border border-[#3b494c]/20 text-[#e2e2e6] rounded-lg font-medium hover:bg-[#37393d] transition-colors appearance-none outline-none focus:border-[#00e5ff]/50 cursor-pointer"
+              >
+                <option value="All">All Nodes</option>
+                <option value="Applied">Applied</option>
+                <option value="Interviewing">Interviewing</option>
+                <option value="Offer">Offer</option>
+                <option value="Rejected">Rejected</option>
+              </select>
+            </div>
               
               <button 
                 onClick={() => setIsAdding(true)} 
@@ -51,7 +62,7 @@ const JobTracker = () => {
 
           {/* Table Container */}
           <div className="overflow-x-auto">
-            <JobList key={refreshKey} />
+            <JobList key={`${refreshKey}-${statusFilter}`} filter={statusFilter} />
           </div>
         </>
       )}

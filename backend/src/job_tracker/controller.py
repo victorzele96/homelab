@@ -1,6 +1,7 @@
 import sys
 import os
 import psycopg2
+from datetime import datetime
 
 # 1. Get the absolute path of the current file (controller.py)
 current_script_path = os.path.abspath(__file__)
@@ -56,3 +57,29 @@ class JobTrackerController(BaseController):
     def remove_job(self, job_id):
         query = "DELETE FROM applications WHERE id = %s"
         return self.execute_action(query, params=(job_id,))
+    
+    def update_application(self, job_id, updated_job: dict):
+        try:
+            print(f"DEBUG: Received update for ID {job_id}: {updated_job}")
+            query = """UPDATE applications 
+                        SET company_name=%s, job_title=%s, job_link=%s, status=%s, notes=%s, last_updated=%s 
+                        WHERE id=%s
+                    """
+            params = (
+                updated_job.get('company_name'),
+                updated_job.get('job_title'),
+                str(updated_job.get('job_link', '')),
+                updated_job.get('status'),
+                updated_job.get('notes'),
+                datetime.now(),
+                job_id
+            )
+
+            return self.execute_action(
+                query, 
+                params=params, 
+                success_msg=f"Job at {updated_job.get('company_name')} updated successfully"
+            )
+        except Exception as e:
+            print(f"!!! CRITICAL ERROR in update_application: {str(e)}")
+            return None

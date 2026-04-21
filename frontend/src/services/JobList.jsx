@@ -17,6 +17,10 @@ const StatusBadge = ({ status }) => {
     'Rejected': {
       container: "border-[#ffb4ab]/30 bg-[#ffb4ab]/5 text-[#ffb4ab]",
       dot: "bg-[#ffb4ab]"
+    },
+    'Offer': {
+      container: "border-[#22bb33]/30 bg-[#22bb33]/10 text-[#22bb33]",
+      dot: "bg-[#22bb33]"
     }
   };
 
@@ -33,8 +37,9 @@ const StatusBadge = ({ status }) => {
   );
 };
 
-const JobList = () => {
+const JobList = ({ filter }) => {
   const [jobs, setJobs] = useState([]);
+  const [statusFilter, setStatusFilter] = useState('All');
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const jobsPerPage = 5;
@@ -107,10 +112,43 @@ const JobList = () => {
     }
   };
 
+const [editingJob, setEditingJob] = useState(null);
+
+const handleEditClick = (job) => {
+  setEditingJob({ ...job });
+};
+
+const saveEdit = async () => {
+  if (!editingJob) return;
+
+  const response = await fetch(`http://localhost:8000/jobs/${editingJob.id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(editingJob),
+  });
+
+  if (response.ok) {
+    const updatedJobWithTime = {
+      ...editingJob,
+      last_updated: new Date().toISOString()
+    };
+
+    setJobs(jobs.map(j => j.id === editingJob.id ? updatedJobWithTime : j));
+    setEditingJob(null);
+  }
+};
+
+  const filteredJobs = jobs.filter(job => {
+    if (filter === 'All') return true;
+    return job.status === filter;
+  });
+  const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
   const indexOfLastJob = currentPage * jobsPerPage;
   const indexOfFirstJob = indexOfLastJob - jobsPerPage;
-  const currentJobs = jobs.slice(indexOfFirstJob, indexOfLastJob);
-  const totalPages = Math.ceil(jobs.length / jobsPerPage);
+  const currentJobsToDisplay = filteredJobs.slice(indexOfFirstJob, indexOfLastJob);
+
+
+
 
   if (loading) return <div className="p-6 text-slate-400 font-mono italic animate-pulse">Synchronizing Data...</div>;
 
@@ -129,7 +167,9 @@ const JobList = () => {
         <table className="w-full text-left border-collapse">
           <thead>
             <tr className="bg-[#333538]/30">
-              <th className="px-6 py-4 text-[10px] font-mono text-slate-500 uppercase tracking-widest font-bold">Node Path</th>
+              <th className="px-6 py-4 text-[10px] font-mono text-slate-500 uppercase tracking-widest font-bold min-w-[250px]">
+                Node Path
+              </th>
               <th className="px-6 py-4 text-[10px] font-mono text-slate-500 uppercase tracking-widest font-bold">Operational Title</th>
               <th className="px-6 py-4 text-[10px] font-mono text-slate-500 uppercase tracking-widest font-bold">Status</th>
               <th className="px-6 py-4 text-[10px] font-mono text-slate-500 uppercase tracking-widest font-bold">Notes</th>
@@ -139,10 +179,80 @@ const JobList = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-[#3b494c]/10">
-            {currentJobs.map((app) => (
+            {currentJobsToDisplay.map((app) => (
               <tr key={app.id} className="hover:bg-[#333538]/20 transition-colors group">
+
+                {editingJob?.id === app.id ? (
+                <>
+                  {/* Edit Link */}
+                  <td className="px-6 py-4">
+                    <input
+                      className="bg-[#1e1e1e] border border-[#00e5ff] text-[#c3f5ff] text-sm rounded px-2 py-1 w-full outline-none"
+                      value={editingJob.job_link}
+                      onChange={(e) => setEditingJob({ ...editingJob, job_link: e.target.value })}
+                    />
+                  </td>
+                  {/* Edit Company Name and Title*/}
+                  <td className="px-6 py-4">
+                    <input
+                      className="bg-[#1e1e1e] border border-[#00e5ff] text-[#e2e2e6] text-sm rounded px-2 py-1 w-full mb-1 outline-none"
+                      value={editingJob.job_title}
+                      onChange={(e) => setEditingJob({ ...editingJob, job_title: e.target.value })}
+                    />
+                    <input
+                      className="bg-[#1e1e1e] border border-slate-600 text-[10px] text-slate-400 font-mono rounded px-2 py-0.5 w-full outline-none"
+                      value={editingJob.company_name}
+                      onChange={(e) => setEditingJob({ ...editingJob, company_name: e.target.value })}
+                    />
+                  </td>
+                  {/* Edit Status */}
+                  <td className="px-6 py-4">
+                    <select
+                      className="bg-[#1e1e1e] border border-[#00e5ff] text-white text-xs rounded px-1 py-1 w-full outline-none"
+                      value={editingJob.status}
+                      onChange={(e) => setEditingJob({ ...editingJob, status: e.target.value })}
+                    >
+                      <option value="Applied">Applied</option>
+                      <option value="Interviewing">Interviewing</option>
+                      <option value="Rejected">Rejected</option>
+                      <option value="Offer">Offer</option>
+                    </select>
+                  </td>
+                  {/* Edit Notes */}
+                  <td className="px-6 py-4">
+                    <input
+                      className="bg-[#1e1e1e] border border-slate-700 text-xs text-slate-400 rounded px-2 py-1 w-full outline-none"
+                      value={editingJob.notes || ""}
+                      onChange={(e) => setEditingJob({ ...editingJob, notes: e.target.value })}
+                    />
+                  </td>
+                  {/* Date don't need to be changed manually */}
+                <td className="px-6 py-4 text-[10px] font-mono text-slate-500">{formatDate(app.created_at)}</td>
+                <td className="px-6 py-4 text-[10px] font-mono text-slate-500">{formatDate(app.last_updated)}</td>
+                  {/* Edit and Delete buttons */}
+                  <td className="px-6 py-4 text-right">
+                    <div className="flex justify-end gap-2">
+                      <button 
+                        onClick={saveEdit}
+                        className="p-1.5 text-green-400 hover:text-green-300 transition-colors"
+                        title="Save Changes"
+                      >
+                        <span className="material-symbols-outlined text-lg">check_circle</span>
+                      </button>
+                      <button 
+                        onClick={() => setEditingJob(null)}
+                        className="p-1.5 text-slate-400 hover:text-white transition-colors"
+                        title="Cancel"
+                      >
+                        <span className="material-symbols-outlined text-lg">cancel</span>
+                      </button>
+                    </div>
+                  </td>
+                </>
+              ) : (
+                <>
                 <td className="px-6 py-4">
-                  <a className="text-[#c3f5ff] hover:underline flex items-center gap-2 text-sm truncate max-w-[150px]" 
+                  <a className="text-[#c3f5ff] hover:underline flex items-center gap-2 text-sm rounded px-2 py-1 w-full outline-none" 
                      href={app.job_link} target="_blank" rel="noopener noreferrer">
                     <span className="material-symbols-outlined text-xs">link</span>
                     {app.job_link}
@@ -160,7 +270,10 @@ const JobList = () => {
                 <td className="px-6 py-4 text-[10px] font-mono text-slate-500">{formatDate(app.last_updated)}</td>
                 <td className="px-6 py-4 text-right">
                   <div className="flex justify-end gap-3 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button className="p-1.5 text-slate-400 hover:text-[#00e5ff] transition-colors">
+                    <button 
+                      onClick={() => handleEditClick(app)}
+                      className="p-1.5 text-slate-400 hover:text-[#00e5ff] transition-colors"
+                    >
                       <span className="material-symbols-outlined text-lg">edit</span>
                     </button>
                     <button 
@@ -172,6 +285,9 @@ const JobList = () => {
                     </button>
                   </div>
                 </td>
+                </>
+                )
+              }
               </tr>
             ))}
           </tbody>
