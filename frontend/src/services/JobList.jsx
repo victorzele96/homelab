@@ -42,6 +42,7 @@ const JobList = ({ filter }) => {
   const [statusFilter, setStatusFilter] = useState('All');
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedNote, setSelectedNote] = useState(null);
   const jobsPerPage = 5;
 
   const totalApps = jobs.length;
@@ -147,7 +148,9 @@ const saveEdit = async () => {
   const indexOfFirstJob = indexOfLastJob - jobsPerPage;
   const currentJobsToDisplay = filteredJobs.slice(indexOfFirstJob, indexOfLastJob);
 
-
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filter]);
 
 
   if (loading) return <div className="p-6 text-slate-400 font-mono italic animate-pulse">Synchronizing Data...</div>;
@@ -265,7 +268,16 @@ const saveEdit = async () => {
                 <td className="px-6 py-4">
                   <StatusBadge status={app.status} />
                 </td>
-                <td className="px-6 py-4 text-xs font-mono text-slate-400 max-w-[120px] truncate">{app.notes || "---"}</td>
+                <td className="px-6 py-4 max-w-[200px]">
+                <div 
+                  onClick={() => setSelectedNote(app.notes)}
+                  className="text-slate-400 text-sm truncate cursor-pointer hover:text-[#c3f5ff] transition-colors flex items-center gap-2"
+                  title="Click to view full note"
+                >
+                  <span className="material-symbols-outlined text-xs">visibility</span>
+                  {app.notes || <span className="italic opacity-50">No notes provided</span>}
+                </div>
+              </td>
                 <td className="px-6 py-4 text-[10px] font-mono text-slate-500">{formatDate(app.created_at)}</td>
                 <td className="px-6 py-4 text-[10px] font-mono text-slate-500">{formatDate(app.last_updated)}</td>
                 <td className="px-6 py-4 text-right">
@@ -292,6 +304,43 @@ const saveEdit = async () => {
             ))}
           </tbody>
         </table>
+        {/* Note Modal */}
+        {selectedNote && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
+            <div className="bg-[#1a1c1f] border border-slate-800 w-full max-w-2xl rounded-xl shadow-2xl overflow-hidden">
+              {/* Modal Header */}
+              <div className="flex justify-between items-center p-6 border-b border-slate-800">
+                <h3 className="text-xl font-['Space_Grotesk'] font-bold text-[#c3f5ff] flex items-center gap-2">
+                  <span className="material-symbols-outlined">description</span>
+                  Application Notes
+                </h3>
+                <button 
+                  onClick={() => setSelectedNote(null)}
+                  className="text-slate-500 hover:text-white transition-colors"
+                >
+                  <span className="material-symbols-outlined">close</span>
+                </button>
+              </div>
+              
+              {/* Modal Content */}
+              <div className="p-8 max-h-[60vh] overflow-y-auto">
+                <p className="text-slate-300 whitespace-pre-wrap font-['Inter'] leading-relaxed">
+                  {selectedNote}
+                </p>
+              </div>
+
+              {/* Modal Footer */}
+              <div className="p-4 bg-[#141517] border-t border-slate-800 flex justify-end">
+                <button 
+                  onClick={() => setSelectedNote(null)}
+                  className="px-6 py-2 bg-[#282a2d] text-white rounded-lg hover:bg-[#37393d] transition-all"
+                >
+                  Close
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
 
         {jobs.length === 0 && (
           <div className="p-10 text-center text-slate-500 font-mono text-sm">
