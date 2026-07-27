@@ -67,7 +67,8 @@ const JobList = ({ filter }) => {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await fetch('http://localhost:8000/jobs/all');
+        const API_URL = import.meta.env.VITE_API_URL_TRACKER || 'http://192.168.7.17:8000'; 
+        const response = await fetch(`${API_URL}/jobs/all`);
         const data = await response.json();
         setJobs(data);
       } catch (error) {
@@ -97,7 +98,8 @@ const JobList = ({ filter }) => {
     if (!window.confirm("Are you sure you want to terminate this job node?")) return;
 
     try {
-      const response = await fetch(`http://localhost:8000/jobs/${jobId}`, {
+      const API_URL = import.meta.env.VITE_API_URL_TRACKER || 'http://192.168.7.17:8000'; 
+      const response = await fetch(`${API_URL}/jobs/${jobId}`, {
         method: 'DELETE',
       });
 
@@ -122,7 +124,8 @@ const handleEditClick = (job) => {
 const saveEdit = async () => {
   if (!editingJob) return;
 
-  const response = await fetch(`http://localhost:8000/jobs/${editingJob.id}`, {
+  const API_URL = import.meta.env.VITE_API_URL_TRACKER || 'http://192.168.7.17:8000'; 
+  const response = await fetch(`${API_URL}/jobs/${editingJob.id}`, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(editingJob),
