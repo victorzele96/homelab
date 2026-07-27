@@ -1,0 +1,36 @@
+# Base react image
+FROM node:20-alpine AS build
+
+# Env variable
+ENV NODE_ENV=development
+
+# VITE Env variable
+ARG VITE_API_URL_TRACKER=http://192.168.7.17:8000
+ARG VITE_API_URL_CHAT=http://192.168.7.17:8001
+
+ENV VITE_API_URL_TRACKER=$VITE_API_URL_TRACKER
+ENV VITE_API_URL_CHAT=$VITE_API_URL_CHAT
+
+# Set working directory
+WORKDIR /frontend
+
+# Copy package files (we will ignore package-lock to fetch the right binary)
+COPY package.json ./
+
+# Clean install directly targeted for Alpine (musl) + Pi (ARM64)
+RUN npm install --include=optional --arch=arm64 --platform=linux
+
+# Copy rest of the project code
+COPY . .
+
+# Set ownership to node user for security after everything is copied
+RUN chown -R node:node /frontend
+
+# Switch to non-root user for execution
+USER node
+
+# Expose Vite port
+EXPOSE 5173
+
+# Run the frontend
+CMD ["npm", "run", "dev", "--", "--host"]

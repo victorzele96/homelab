@@ -1,0 +1,68 @@
+services:
+  # Official image for postgres
+  db:
+    image: postgres:16
+    container_name: homelab_db
+    restart: always
+    env_file:
+      - .env
+    environment:
+    - POSTGRES_USER=${DB_USER}
+    - POSTGRES_PASSWORD=${DB_PASSWORD}
+    - POSTGRES_DB=${DB_NAME}
+    ports:
+      - "5444:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+
+
+  backend-tracker:
+    image: victorzele96/homelab-backend-tracker:latest
+    container_name: homelab_backend_tracker
+    restart: always
+    env_file:
+      - ./backend/src/shared/database/job_tracker_db/.env.job_tracker
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=job_tracker
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  backend-chatai:
+    image: victorzele96/homelab-backend-chatai:latest
+    container_name: homelab_backend_chatai
+    restart: always
+    env_file:
+      - ./backend/src/shared/database/chat_ai_db/.env.chatAI
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=chat_ai
+    ports:
+      - "8001:8000"
+    depends_on:
+      - db
+
+
+  frontend:
+    image: victorzele96/homelab-frontend:latest
+    container_name: homelab_frontend
+    restart: always
+    ports:
+      - "5173:5173"  # Vite port
+    volumes:
+      - ./frontend:/frontend
+      - /frontend/node_modules
+    environment:
+      - VITE_API_URL_TRACKER=http://192.168.7.17:8000
+      - VITE_API_URL_CHAT=http://192.168.7.17:8001
+    depends_on:
+      - backend-tracker
+      - backend-chatai
+
+volumes:
+  postgres_data: # Volume to save data in case the container deleted.

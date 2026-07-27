@@ -22,7 +22,8 @@ const JobForm = ({ onCancel, onSuccess }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:8000/jobs/add', formData);
+      const API_URL = import.meta.env.VITE_API_URL_TRACKER || 'http://192.168.7.17:8000'; 
+      const response = await axios.post(`${API_URL}/jobs/add`, formData);
 
       if (response.status === 201 || response.status === 200) {
         console.log('Node deployed successfully:', response.data);
